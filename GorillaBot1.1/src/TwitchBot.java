@@ -64,10 +64,10 @@ public class TwitchBot extends PircBot{
 			*/
 			if(message.equalsIgnoreCase("!queueme")){
 				if(queueW.queue.contains(sender)){
-					sendMessage(channel, sender + " is already in the queue!");
+					messagesQueue('@' + sender + " is already in the queue!", false);
 				}
 				else if(queueW.ingame.contains(sender)){
-					sendMessage(channel, sender + " is currently in game with " + Config.channelName + " and cannot requeue until after the game.");
+					messagesQueue('@' + sender + " is currently in game with " + Config.channelName + " and cannot requeue until after the game.",false);
 				}
 				else{
 					String isFollower = "";
@@ -79,10 +79,10 @@ public class TwitchBot extends PircBot{
 					}
 					if(!isFollower.equals("") && !isFollower.contains("is not following " + Config.channel)){
 						queueW.updateAdd(sender);
-						sendMessage(channel, "/w " + sender + " You have been added to the queue");
+						messagesQueue("@" + sender + " You have been added to the queue",false);
 					}
 					else{
-						sendMessage(channel, "/w " + sender + " You must be a follower in order to join the queue! If you have followed recently, please wait 30 seconds and try again.");
+						messagesQueue("@" + sender + " You must be a follower in order to join the queue! If you have followed recently, please wait 30 seconds and try again.",false);
 					}
 				}
 			}
@@ -103,16 +103,16 @@ public class TwitchBot extends PircBot{
 			else if(message.equalsIgnoreCase("!removeme")){
 				if(queueW.queue.contains(sender)){
 					queueW.updateRemove(sender);
-					sendMessage(channel, sender + " has been removed!");
+					messagesQueue('@' + sender + " has been removed!",false);
 				}
 				else{
-					sendMessage(channel, sender + " is not in the queue!");
+					messagesQueue('@' + sender + " is not in the queue!",false);
 				}
 			}
 			else if(message.equalsIgnoreCase("!addqueue")){
 				if(sender.equalsIgnoreCase("reiss_wolf")){
 					queueW.updateAdd(data);
-					sendMessage(channel, "/w " + Config.channelName + " " + data + " has been added to the queue!");
+					messagesQueue("@" + Config.channelName + " " + data + " has been added to the queue!",false);
 				}
 			}
 			else if(message.equalsIgnoreCase("!ingame")){
