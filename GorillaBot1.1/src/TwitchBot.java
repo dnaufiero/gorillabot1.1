@@ -7,7 +7,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.jibble.pircbot.*;
+import org.jibble.pircbot.PircBot;
+
+import com.revlo.clients.RevloClient;
+import com.revlo.exceptions.RevloServiceException;
+import com.revlo.responses.LoyaltyResponse;
 
 public class TwitchBot extends PircBot{
 	
@@ -27,6 +31,7 @@ public class TwitchBot extends PircBot{
 	ArrayList<String> messageQueue = new ArrayList<String>();
 	//JavaAudioPlaySoundExample player = new JavaAudioPlaySoundExample();
 	WindowManager queueW = new WindowManager();
+	RevloClient revlo = new RevloClient("fybt17hI3FsvYE7CuMDiUunB_7DyBPxH1PeqVEQRwqg");
 
 	public TwitchBot(){
 		this.setName(Config.botname);
@@ -38,6 +43,7 @@ public class TwitchBot extends PircBot{
 	public void start(){
 		//messages();
 		resetCounter();
+		pointsUpdate();
 	}
 	
 	public void onMessage(String channel, String sender, String login, String hostname, String message){
@@ -168,6 +174,11 @@ public class TwitchBot extends PircBot{
 		executor.scheduleAtFixedRate(helloRunnable, 30, 600, TimeUnit.SECONDS);
 	}
 	
+	public void pointsUpdate(){
+		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+		executor.scheduleAtFixedRate(pointsRun, 0, 5, TimeUnit.SECONDS);
+	}
+	
 	public void resetCounter(){
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 		executor.scheduleAtFixedRate(counterReset, 0, 30, TimeUnit.SECONDS);
@@ -180,6 +191,22 @@ public class TwitchBot extends PircBot{
 	    	if(i == msgs.length){
 	    		i = 0;
 	    	}
+	    }
+	};
+	
+	Runnable pointsRun = new Runnable() {
+	    public void run() {
+	    	try {
+	    		sendMessage(Config.channel, "Hello");
+				LoyaltyResponse test = revlo.getLoyalty(null);
+				String test1 = test.toString();
+				sendMessage(Config.channel, test1);
+				
+			} catch (RevloServiceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	sendMessage(Config.channel, "Test1");
 	    }
 	};
 	
